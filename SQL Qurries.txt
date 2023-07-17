@@ -1,0 +1,82 @@
+create database carinsurance;
+
+use carinsurance;
+
+create table car (
+ car_no varchar(12) primary key, 
+ chassis_no int(20) not null,
+ engine_no int(20) not null, 
+ car_make varchar(15)not null, 
+ model varchar(20) not null, 
+ model_year year not null, 
+ purchase_price int(15) not null);
+select * from car;
+insert into car values ("DL503C6545",1256,9856,"Tata","Nano","2016",200000),
+                       ("HR87C79876",8920,4586,"Maruti","Swift","2016",250000),
+                       ("DL503S8545",2354,4596,"Tata","Balano","2020",300000),
+                       ("HR506C6545",4575,0125,"Mahindra","Scrapio","2019",223000),
+                       ("UP903C6598",5566,9021,"Honda","City","2020",200000);
+                      
+create table policy (
+ policy_no int(4) primary key auto_increment,
+ policy_date date not null,
+ emi int(15) not null, 
+ valid_till date not null,
+ car_no varchar(12),
+ person_id int(4),
+ foreign key (car_no) references car(car_no),
+ foreign key (person_id) references person(person_id));
+
+insert into policy(policy_no,policy_date,emi,valid_till,car_no,person_id)
+values (101,curdate(),1000,date_add(curdate(), interval 1 year),'DL503C6545',301);
+ create table person(
+ person_id int(5) primary key auto_increment,
+ person_name varchar(20) not null,
+ dob date not null ,
+age int(3) ,
+ house_no varchar(5) not null,
+ locality varchar(15) not null, 
+ city varchar(15) not null,
+ pin int(6) not null);
+
+
+select * from car;
+
+insert into own(person_id,car_no) values(302,'HR506C6545');
+
+delete from person where person_id=302;
+
+create table repair( 
+repair_id int(4) primary key auto_increment,
+repair_amount int(10) not null,
+workshop_name varchar(20) not null, 
+wsp_bill_no int(4) not null, 
+repair_date date not null);
+
+insert into repair(repair_id,repair_amount,workshop_name,wsp_bill_no,repair_date)
+values (401,12000, 'Ankaj Gab',123,'2023-01-09');
+
+create table claim (
+   claim_id int(4) primary key auto_increment,
+   repair_id int(4),
+   policy_no int(4),
+   claim_date date not null,
+   foreign key (repair_id) references repair(repair_id),
+   foreign key (policy_no) references policy(policy_no));
+
+insert into claim(claim_id, repair_id, policy_no, claim_date)
+values (809,401,101,curdate());
+
+create table own(
+person_id int(4) references person(person_id),
+car_no varchar(12) unique references car(car_no));
+
+create table driver(
+person_id int(4) references person(person_id),
+licence_no varchar(12) not null);
+
+select * from policy;
+insert into policy(policy_date,emi,valid_till) 
+values(curdate(),325,date_add(curdate(), INTERVAL 1 year));
+
+select * from person;
